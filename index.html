@@ -332,11 +332,11 @@
       <h2>Get In Touch</h2>
       <div class="row">
         <div class="col-lg-6">
-          <form class="contact-box">
-            <input type="text" class="form-control mb-3" placeholder="Your Name">
-            <input type="email" class="form-control mb-3" placeholder="Your Email">
-            <textarea class="form-control mb-3" rows="5" placeholder="Message"></textarea>
-            <button class="btn btn-custom w-100">Send Message</button>
+          <form id="contactForm" class="contact-box">
+            <input type="text" id="name" class="form-control mb-3" placeholder="Your Name" required>
+            <input type="email" id="email" class="form-control mb-3" placeholder="Your Email" required>
+            <textarea id="message" class="form-control mb-3" rows="5" placeholder="Message" required></textarea>
+            <button type="submit" class="btn btn-custom w-100">Send Message</button>
           </form>
         </div>
         <div class="col-lg-6 mt-4 mt-lg-0">
@@ -357,6 +357,38 @@
   <footer>
     <p>© 2025 SK.Siddikqui. All Rights Reserved.</p>
   </footer>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("contactForm");
+      const responseMsg = document.getElementById("responseMsg");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const message = document.getElementById("message").value.trim();
+
+        // Show loading text
+        responseMsg.textContent = "Sending…";
+
+        fetch('send.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, message })
+        })
+        .then(res => res.text()) // your PHP can echo a string
+        .then(data => {
+          responseMsg.textContent = data; // show PHP response
+          form.reset();
+        })
+        .catch(err => {
+          console.error(err);
+          responseMsg.textContent = "Something went wrong. Please try again later.";
+        });
+      });
+    });
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
